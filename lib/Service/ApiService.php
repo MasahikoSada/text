@@ -115,6 +115,15 @@ class ApiService {
 			} catch (NotFoundException $e) {
 				return new NotFoundResponse();
 			}
+			
+			$fileContents=$file->getContent();
+			$encoding = mb_detect_encoding($fileContents . 'a', 'SJIS-win, GB2312, GBK, UTF-8, WINDOWS-1252, ISO-8859-15, ISO-8859-1, ASCII', true);
+			if ($encoding === '') {
+				$encoding = 'ISO-8859-1';
+			}
+			$fileContents = iconv($encoding, 'UTF-8', $fileContents);
+			$file->putContent($fileContents);
+
 			return new FileDisplayResponse($file, 200, ['Content-Type' => 'text/plain']);
 		}
 		return new NotFoundResponse();
