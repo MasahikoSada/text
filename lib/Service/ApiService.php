@@ -115,6 +115,11 @@ class ApiService {
 			} catch (NotFoundException $e) {
 				return new NotFoundResponse();
 			}
+			
+			$fileContents = $file->getContent();
+			$fileContents = mb_convert_encoding($fileContents, 'UTF-8', 'auto');
+			$file->putContent($fileContents);
+			
 			return new FileDisplayResponse($file, 200, ['Content-Type' => 'text/plain']);
 		}
 		return new NotFoundResponse();
